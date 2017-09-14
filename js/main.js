@@ -78,9 +78,8 @@ function init(){
 	});
 	
 }
-function log(str){
-	console.log(str);
-}
+
+log = console.log.bind(console);
 function searchCharacters(term,send){
 	mainQuery({
 		data:{'s':term,'method':'searchCharacters'},
@@ -589,7 +588,6 @@ function knowablePsionics(ch,id){
 	return num;
 }
 function checkBackground(ch,p){
-	console.log('check background')
 	var psion   = findSpecial('psion',ch.background);
 	var knack   = findSpecial('knack',ch.background,true);
 	var diverge = findSpecial('aionly',ch.background,true);
@@ -601,6 +599,7 @@ function checkBackground(ch,p){
 	if(diverge && (pb.id==3 || pb.id==5)) return true; //divergent code can have these psionic cats
 	//Has 1 psion background
 	if(psion.length==1 && psion[0].special.indexOf(pb.background)!=-1){
+		log('')
 		return true;
 	//Has 2 psion backgrounds
 	}else if(psion.length == 2){
@@ -617,7 +616,7 @@ function checkBackground(ch,p){
 			}
 		}
 	//Has all psion backgrounds
-	}else if(psion.length==3){
+	}else if(psion.length>2){
 		return true;	
 	}	
 }
@@ -4495,11 +4494,10 @@ function checkAllowance(){
 }
 //Final Login
 function doLogin(char,jump,excempt){
-	log('DO LOGIN')
 	ds.loggedIn = true;
 	$('.filthy-rich.circle').hide()
 	getCharacter(char,function(ch){
-		/*
+		
 		ds.CH = formatChar(ch[0]);
 		var f = _.find(core.active,function(c){
 			return c.char_id+'' == ds.CH.char_id+''
@@ -4543,7 +4541,7 @@ function doLogin(char,jump,excempt){
 				updateInterface();
 				detectIdle();
 			});
-		})*/
+		})
 	})
 }
 function getTeams(send){
@@ -5144,6 +5142,7 @@ function modDrops(modz){
 			var mods = modsTo(g.module ,'object')
 			var sel = $('[data-gear-id="'+g.rel_id+'"] #modselect')
 			_.each(mods,function(m){
+				console.log(cleanCopy(m))
 				if(typeof m == 'object' && m.name.toLowerCase().indexOf('dermal armor')!=-1){
 					//Dermal Armor
 					var health = fixInt($('[data-gear-id="'+g.rel_id+'"]').attr('data-hp'));
@@ -5638,6 +5637,7 @@ function hasSkill(list,char){
 	list = list.split(',');
 	var t = false;
 	_.each(list,function(sk){
+		console.log(char)
 		var f = _.find(char.known,function(s){
 			return s.sk_id == sk || s.special == sk;
 		})

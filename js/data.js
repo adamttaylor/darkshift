@@ -811,6 +811,7 @@ function mapFullCharacter(data){
 		index = _.defaults(index,{'skill':[]});
 		newData.push(index);
 	})
+	
 	newData =_.sortBy(newData,function(s){
 		return s.char_name;
 	})
@@ -1325,6 +1326,7 @@ function allEquip(send){
 	core.Blaster = [];
 	core.Explosives = [];
 	getDataFromLocal('equipment','allEquip',function(html){
+		//Format function
 		_.each(html,function(h){
 			switch(h.rarity){			
 				case 'A':
@@ -1404,7 +1406,7 @@ function allEquip(send){
 					return ii.sort+ii.cost+ii.name;
 				})
 			})
-
+		core.equipment = html
 		if(send)send(html)
 	})
 }
