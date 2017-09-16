@@ -4054,7 +4054,7 @@ option[disabled] {
 	}
 	.label{
 		width:150px;
-	    margin-left: -150px;	
+	    margin-left: -150px;
 	}
 	.value{
 		color:$grey;
@@ -4080,6 +4080,13 @@ option[disabled] {
 	label.full{
 		width:100%;
 		margin-left: 3px;
+	}
+	.widelabel{
+		margin-left: 250px;
+		label{
+			width: 250px;
+		    margin-left: -250px;
+		}
 	}
 }
 .error-panel{

@@ -115,6 +115,30 @@ $(document).ready(function(e) {
 			$('.known.screen .actions.ego').show()
 		}
 	})
+	//what if you put more in than needed?
+	$('body').on('change', '.spendFrag',function(){
+		$('.spending').text(totalEmbedFrags())
+	})
+	$('body').on('input', '.spendFrag',function(){
+		if(parseInt($(this).val()) > parseInt($(this).attr('max'))){
+			$(this).val($(this).attr('max'))
+		}
+		$('.spending').text(totalEmbedFrags())
+	})
+	
+	$('body').on('change', '#embedType',function(){
+		$('.spendFrag').val(0)
+		$('.spending').text(0)
+		if($(this).val()=='random'){
+			$('#chooseEmbed').hide()
+			$('.needed').text(10)
+			$('.neededP').text(30)
+		}else{
+			$('#chooseEmbed').show()
+			$('.needed').text(20)
+			$('.neededP').text(40)
+		}
+	})
 	//Psionic multi-attribute selector
 	$('body').on('click','.drop.more span',function(e){
 		e.stopPropagation();

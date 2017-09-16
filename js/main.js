@@ -595,14 +595,20 @@ function checkBackground(ch,p){
 	var pb = _.find(psionic_cats,function(c){
 		return c.id == p.psi_category
 	})
+	var relPsionics = 0;
+	if(ch.exceptions.tele)  relPsionics++;
+	if(ch.exceptions.bio)  relPsionics++;
+	if(ch.exceptions.tech)  relPsionics++;
+	
+	
 	if(knack && pb.id < 4) return true //Knack can have this psionic cat
 	if(diverge && (pb.id==3 || pb.id==5)) return true; //divergent code can have these psionic cats
 	//Has 1 psion background
-	if(psion.length==1 && psion[0].special.indexOf(pb.background)!=-1){
-		log('')
+	
+	if(relPsionics==1 && psion[0].special.indexOf(pb.background)!=-1){
 		return true;
 	//Has 2 psion backgrounds
-	}else if(psion.length == 2){
+	}else if(relPsionics== 2){
 		var bgArr = pb.background.split(',')
 		if(bgArr.length < 3){
 			var cnt = 0;
@@ -616,7 +622,7 @@ function checkBackground(ch,p){
 			}
 		}
 	//Has all psion backgrounds
-	}else if(psion.length>2){
+	}else if(relPsionics==3){
 		return true;	
 	}	
 }
@@ -1029,6 +1035,184 @@ function patientChart(){
 	var str = tmp.patientChart(ds.editCH);
 	toscreen('psych-process',str);
 }
+function embedSkill(){
+	var blacklist_ids = _.pluck(ds.editCH.learn,'skill_id');
+	var skills = _.filter(cleanCopy(core.skills),function(e,i){
+		//remove all skills that are aquired
+		var f = _.find(blacklist_ids,function(b,i){
+			return b+'' == e.sk_id+'';
+		})
+		return !f
+	})
+	var str = tmp.psychEmbed({char:ds.editCH,skills:skills});
+	toscreen('psych-process',str);
+	
+}
+function embedPsionic(){
+	log('-------')
+	var blacklist_ids = _.pluck(ds.editCH.learnp,'id');
+	var skills = _.filter(cleanCopy(core.psion),function(e,i){
+		//remove all skills that are aquired
+		var f = _.find(blacklist_ids,function(b,i){
+			return b+'' == e.psi_id+'';
+		})
+		return !f
+	})
+	var str = tmp.psychEmbedPsion({char:ds.editCH,psion:skills});
+	toscreen('psych-process',str);
+}
+function doEmbedPsion(e){
+	if(totalEmbedFrags() < parseInt($('.neededP').text())){
+		message('Not enough frags')
+		return false;
+	}
+	var skill = false;
+	if($('#embedType').val()=='random'){
+		var draw = Math.floor(Math.random() * ($('#chooseEmbed option').length)) -1
+		skill = $('#chooseEmbed option:nth-child('+draw+')').val();
+		
+	}else if($('#chooseEmbed').val()){
+		skill = $('#chooseEmbed').val()
+	}else{
+		message('Select a Psionic to Embed')
+		return false;
+	}
+	
+	var cost = $('.totalEgoCost').text()
+	var inn  = $(e.target).parents('.panel');
+	var serv = $(inn).find('[name="service"]').val();
+	var tx   = $(inn).find('.egotax').text();
+	var tot  = $(inn).find('.totalEgoCost').text()
+	var chid = $(inn).find('[name="subject"]').val();
+	var pin  = $(inn).find('[name="pin"]').val();
+	var b    = safeBudget(tx,'e');
+	var basic_frag = $('.spendFrag[name="basic_frag"]').val()
+	var biomedical_frag  = $('.spendFrag[name="biomedical_frag"]').val()
+	var chemical_frag  = $('.spendFrag[name="chemical_frag"]').val()
+	var tactical_frag  = $('.spendFrag[name="tactical_frag"]').val()
+	var cybernetic_frag = $('.spendFrag[name="cybernetic_frag"]').val()
+	
+	var track = {'action':'Make Psionic','char_id':ds.CH.char_id,'edit_char_id':ds.editCH,
+		'info':JSON.stringify(
+		{'patient':chid,'dr':ds.CH.char_id,'cost':serv,'tax':tx,'total':tot}
+	)};
+	log(skill)
+	log(basic_frag ,biomedical_frag, chemical_frag, tactical_frag, cybernetic_frag)
+	
+	if(!pin){
+		message('Enter Pin');
+	}else{
+		checkCharPass(chid,pin,function(html){
+			if(typeof html == 'object'){
+				mainQuery({
+					data:{'method':'createPsionic','psi_id':skill,'patient':chid,'dr':ds.CH.char_id,
+						'basic_frag':basic_frag,
+						'biomedical_frag': biomedical_frag,
+						'chemical_frag' : chemical_frag,
+						'tactical_frag' : tactical_frag,
+						'cybernetic_frag' : cybernetic_frag,
+						'cost':serv,'tax':tx,'total':tot,'track':track,'budget':b},
+						success: function(html){
+							toscreen('psycho-skill');
+							message('Psionic Created');
+							getOptions()
+							refreshMaintenence()
+					}
+				})
+				log('PASSWORD CORRECT')			
+			}else if(html==2){
+				message('Incorrect Password',false,true)
+			}				
+		})
+		
+	}
+}
+function doEmbedSkill(e){
+	
+	if(totalEmbedFrags() < parseInt($('.needed').text())){
+		message('Not enough frags')
+		return false;
+	}
+	var skill = false;
+	if($('#embedType').val()=='random'){
+		log('SET TO RANDOM')
+		var draw = Math.floor(Math.random() * ($('#chooseEmbed option').length)) -1
+		log(draw)
+		skill = $('#chooseEmbed option:nth-child('+draw+')').val();
+		
+	}else if($('#chooseEmbed').val()){
+		log('THERE IS A SKILL SELECTED')
+		skill = $('#chooseEmbed').val()
+	}else{
+		message('Select a Skill to Embed')
+		return false;
+	}
+	
+	var cost = $('.totalEgoCost').text()
+	var inn  = $(e.target).parents('.panel');
+	var serv = $(inn).find('[name="service"]').val();
+	var tx   = $(inn).find('.egotax').text();
+	var tot  = $(inn).find('.totalEgoCost').text()
+	var chid = $(inn).find('[name="subject"]').val();
+	var pin  = $(inn).find('[name="pin"]').val();
+	var b    = safeBudget(tx,'e');
+	var basic_frag = $('.spendFrag[name="basic_frag"]').val()
+	var biomedical_frag  = $('.spendFrag[name="biomedical_frag"]').val()
+	var chemical_frag  = $('.spendFrag[name="chemical_frag"]').val()
+	var tactical_frag  = $('.spendFrag[name="tactical_frag"]').val()
+	var cybernetic_frag = $('.spendFrag[name="cybernetic_frag"]').val()
+	
+	var track = {'action':'Make Skill','char_id':ds.CH.char_id,'edit_char_id':ds.editCH,
+		'info':JSON.stringify(
+		{'patient':chid,'dr':ds.CH.char_id,'cost':serv,'tax':tx,'total':tot}
+	)};
+	log(skill)
+	log(basic_frag ,biomedical_frag, chemical_frag, tactical_frag, cybernetic_frag)
+	
+	if(!pin){
+		message('Enter Pin');
+	}else{
+		checkCharPass(chid,pin,function(html){
+			if(typeof html == 'object'){
+				mainQuery({
+					data:{'method':'createSkill','skill_id':skill,'patient':chid,'dr':ds.CH.char_id,
+						'basic_frag':basic_frag,
+						'biomedical_frag': biomedical_frag,
+						'chemical_frag' : chemical_frag,
+						'tactical_frag' : tactical_frag,
+						'cybernetic_frag' : cybernetic_frag,
+						'cost':serv,'tax':tx,'total':tot,'track':track,'budget':b},
+						success: function(html){
+							toscreen('psycho-skill');
+							message('Skill Created');
+							getOptions()
+							refreshMaintenence()
+					}
+				})
+				log('PASSWORD CORRECT')			
+			}else if(html==2){
+				message('Incorrect Password',false,true)
+			}				
+		})
+		
+	}
+	
+}
+function totalEmbedFrags(){
+	var total = 0;
+	$('.spendFrag').each(function(i,e){
+		total += parseInt($(e).val())
+	})
+	if(total >= parseInt($('.needed').text())){
+		//prevent more added
+		//$('.spendFrag').attr('disabled','disabled')
+	}else{
+		//allow more added
+		//$('.spendFrag').removeAttr('disabled','disabled')
+	}
+	return total;
+}
+
 function skillBuyer(){
 	var reg = _.filter(core.active.concat(core.teams),function(sk){
 		return sk.char_id != ds.CH.char_id && sk.char_id != ds.editCH.char_id

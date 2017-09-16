@@ -4675,6 +4675,15 @@ option[disabled] {
   margin-left: 3px;
 }
 
+.field-group .widelabel {
+  margin-left: 250px;
+}
+
+.field-group .widelabel label {
+  width: 250px;
+  margin-left: -250px;
+}
+
 .error-panel {
   position: fixed;
   bottom: 0;

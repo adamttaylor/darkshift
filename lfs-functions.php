@@ -823,6 +823,39 @@ function resetEgo(){
 	
 	results($str,false,true);
 }
+function createSkill(){
+	global $_POST,$prefix;
+	extract($_POST);
+	$str = 
+	"update {$prefix}characters set energy = energy - {$total} where char_id={$patient};
+	update {$prefix}characters set basic_frag = basic_frag - {$basic_frag} where char_id={$patient};
+	update {$prefix}characters set biomedical_frag = biomedical_frag - {$biomedical_frag} where char_id={$patient};
+	update {$prefix}characters set chemical_frag = chemical_frag - {$chemical_frag} where char_id={$patient};
+	update {$prefix}characters set tactical_frag = tactical_frag - {$tactical_frag} where char_id={$patient};
+	update {$prefix}characters set cybernetic_frag = cybernetic_frag - {$cybernetic_frag} where char_id={$patient};
+	insert into {$prefix}relationships (subject_id,skill_id,rel_active,rel_key) values({$patient},{$skill_id},'y','learn');
+	update {$prefix}characters set energy = energy + {$cost} where char_id = {$dr};"
+	.station_energy($tax);
+	
+	results($str,false,true);
+}
+function createPsionic(){
+	global $_POST,$prefix;
+	extract($_POST);
+	$str = 
+	"update {$prefix}characters set energy = energy - {$total} where char_id={$patient};
+	update {$prefix}characters set basic_frag = basic_frag - {$basic_frag} where char_id={$patient};
+	update {$prefix}characters set biomedical_frag = biomedical_frag - {$biomedical_frag} where char_id={$patient};
+	update {$prefix}characters set chemical_frag = chemical_frag - {$chemical_frag} where char_id={$patient};
+	update {$prefix}characters set tactical_frag = tactical_frag - {$tactical_frag} where char_id={$patient};
+	update {$prefix}characters set cybernetic_frag = cybernetic_frag - {$cybernetic_frag} where char_id={$patient};
+	insert into {$prefix}relationships (subject_id,skill_id,rel_active,rel_key) values({$patient},{$psi_id},'y','learnp');
+	update {$prefix}characters set energy = energy + {$cost} where char_id = {$dr};"
+	.station_energy($tax);
+	
+	results($str,false,true);
+}
+
 //x
 function removeSkill(){
 	global $_POST,$prefix;

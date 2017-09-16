@@ -2635,6 +2635,8 @@ tmpstr.psychList =
 '<div class="topspace"></div><div class="panel">\
 	<!--<div class="btn next fa" data-cmd="psychSellSkill">Sell Skill</div>-->\
 	<div class="btn next fa" data-cmd="patientChart"><span class="desktext">Patient </span>Charts</div>\
+	<div class="btn next fa" data-cmd="embedSkill"><span class="desktext">Embed </span>Skill</div>\
+	<div class="btn next fa" data-cmd="embedPsionic"><span class="desktext">Embed </span>Psionic</div>\
 	{{#if dr.exceptions.restore}}<div class="btn next fa" data-cmd="fixTrauma"><span class="desktext">Repair </span>Trauma</div>{{/if}}\
 	{{#if dr.exceptions.cognit}}<div class="btn next fa" data-cmd="changeEgo"><span class="desktext">Change </span>Ego</div>{{/if}}\
 	{{#if dr.exceptions.electro}}<div class="btn next fa" data-cmd="removeSkill"><span class="desktext">Remove </span>Skill</div>{{/if}}\
@@ -2681,6 +2683,190 @@ tmpstr.psychReset =
 				</div>\
 			</div>\
 			<div class="btn fa therapy" data-cmd="resetEgo">RESET EGO</div>\
+		</div>\
+	</div>\
+</div>';
+tmpstr.psychEmbed =
+'<div class="topspace"></div><div class="panel">\
+	<input type="hidden" name="subject" value="{{char.char_id}}"/>\
+	<h3 class="block">Embed Skill</h3>\
+	<div class="field-group">\
+		<div class="insider">\
+			<div class="field-line small">\
+				<label class="label">Service Fee</label>\
+				<div class="value input">\
+					<input type="number" name="service" value="0" min="0">\
+				</div>\
+			</div>\
+			<div class="field-line small">\
+				<label class="label fa tax">Tax</label>\
+				<div class="value input">\
+					<label class="egotax">0</label>\
+				</div>\
+			</div>\
+			<div class="field-line small">\
+				<label class="label">Total</label>\
+				<div class="value input">\
+					<label class="totalEgoCost" style="color:black">0</label>\
+				</div>\
+			</div>\
+		</div>\
+	</div>\
+	<h3 class="block">Patient: {{char.char_name}}</h3>\
+	<div class="field-group">\
+		<div class="addskillUI flat-input sub">\
+		    <div class="uibox">\
+			    <div class="sel-wrap type"><select id="embedType">\
+					<option value="random">Random</option>\
+					<option value="specific">Specific</option>\
+				</select></div>\
+				<div class="sel-wrap name"><select style="display:none" id="chooseEmbed">\
+					<option value>Select Skill</option>\
+					{{#each skills}}\
+						<option value="{{id}}">{{sk_name}}</option>\
+					{{/each}}\
+				</select></div>\
+			</div>\
+		</div>\
+	</div>\
+	<div class="field-group">\
+		<div class="insider">\
+			<div class="field-line widelabel small">\
+				<label class="label fa basic">Basic: {{char.basic_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="basic_frag" type="number" max="{{char.basic_frag}}" min="0" value="0"{{#unless char.basic_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<div class="field-line widelabel small">\
+				<label class="label fa tactical">Tactical: {{char.tactical_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="tactical_frag" type="number" max="{{char.tactical_frag}}" min="0" value="0"{{#unless char.tactical_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<div class="field-line widelabel small">\
+				<label class="label fa biomedical">Biomedical: {{char.biomedical_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="biomedical_frag" type="number" max="{{char.biomedical_frag}}" min="0" value="0"{{#unless char.biomedical_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<div class="field-line widelabel small">\
+				<label class="label fa cybernetic">Cyber: {{char.cybernetic_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="cybernetic_frag" type="number" max="{{char.cybernetic_frag}}" min="0" value="0"{{#unless char.cybernetic_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<div class="field-line widelabel small">\
+				<label class="label fa chemical">Chemical: {{char.chemical_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="chemical_frag" type="number" max="{{char.chemical_frag}}" min="0" value="0"{{#unless char.chemical_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<hr/>\
+			<div class="field-line widelabel small">\
+				<label class="label fa">TOTAL:</label>\
+				<div class="value input">\
+					<p><span class="spending">0</span>/<span class="needed">10</span></p>\
+				</div>\
+			</div>\
+			<div class="field-line small">\
+				<label class="label">Pin</label>\
+				<div class="value input">\
+					<strong><input type="password" name="pin"></strong>\
+				</div>\
+			</div>\
+			<div class="btn fa therapy" data-cmd="doEmbedSkill">Embed Skill</div>\
+		</div>\
+	</div>\
+</div>';
+tmpstr.psychEmbedPsion =
+'<div class="topspace"></div><div class="panel">\
+	<input type="hidden" name="subject" value="{{char.char_id}}"/>\
+	<h3 class="block">Embed Psionics</h3>\
+	<div class="field-group">\
+		<div class="insider">\
+			<div class="field-line small">\
+				<label class="label">Service Fee</label>\
+				<div class="value input">\
+					<input type="number" name="service" value="0" min="0">\
+				</div>\
+			</div>\
+			<div class="field-line small">\
+				<label class="label fa tax">Tax</label>\
+				<div class="value input">\
+					<label class="egotax">0</label>\
+				</div>\
+			</div>\
+			<div class="field-line small">\
+				<label class="label">Total</label>\
+				<div class="value input">\
+					<label class="totalEgoCost" style="color:black">0</label>\
+				</div>\
+			</div>\
+		</div>\
+	</div>\
+	<h3 class="block">Patient: {{char.char_name}}</h3>\
+	<div class="field-group">\
+		<div class="addskillUI flat-input sub">\
+		    <div class="uibox">\
+			    <div class="sel-wrap type"><select id="embedType">\
+					<option value="random">Random</option>\
+					<option value="specific">Specific</option>\
+				</select></div>\
+				<div class="sel-wrap name"><select style="display:none" id="chooseEmbed">\
+					<option value>Select Psionic</option>\
+					{{#each  psion}}\
+						<option value="{{id}}">{{psi_name}}</option>\
+					{{/each}}\
+				</select></div>\
+			</div>\
+		</div>\
+	</div>\
+	<div class="field-group">\
+		<div class="insider">\
+			<div class="field-line widelabel small">\
+				<label class="label fa basic">Basic: {{char.basic_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="basic_frag" type="number" max="{{char.basic_frag}}" min="0" value="0"{{#unless char.basic_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<div class="field-line widelabel small">\
+				<label class="label fa tactical">Tactical: {{char.tactical_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="tactical_frag" type="number" max="{{char.tactical_frag}}" min="0" value="0"{{#unless char.tactical_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<div class="field-line widelabel small">\
+				<label class="label fa biomedical">Biomedical: {{char.biomedical_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="biomedical_frag" type="number" max="{{char.biomedical_frag}}" min="0" value="0"{{#unless char.biomedical_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<div class="field-line widelabel small">\
+				<label class="label fa cybernetic">Cyber: {{char.cybernetic_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="cybernetic_frag" type="number" max="{{char.cybernetic_frag}}" min="0" value="0"{{#unless char.cybernetic_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<div class="field-line widelabel small">\
+				<label class="label fa chemical">Chemical: {{char.chemical_frag}}</label>\
+				<div class="value input">\
+					<input class="spendFrag" name="chemical_frag" type="number" max="{{char.chemical_frag}}" min="0" value="0"{{#unless char.chemical_frag}} disabled="disabled"{{/unless}}>\
+				</div>\
+			</div>\
+			<hr/>\
+			<div class="field-line widelabel small">\
+				<label class="label fa">TOTAL:</label>\
+				<div class="value input">\
+					<p><span class="spending">0</span>/<span class="neededP">30</span></p>\
+				</div>\
+			</div>\
+			<div class="field-line small">\
+				<label class="label">Pin</label>\
+				<div class="value input">\
+					<strong><input type="password" name="pin"></strong>\
+				</div>\
+			</div>\
+			<div class="btn fa therapy" data-cmd="doEmbedPsion">Embed Psionic</div>\
 		</div>\
 	</div>\
 </div>';
