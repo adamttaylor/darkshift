@@ -670,7 +670,9 @@ function getOptions(send){
 }
 function checkInChar(ch){
 	var cookie = getCookie('ds_onsite')
-	if(core.options.gamemode && (cookie && cookie=='true')){
+	//if(core.options.gamemode && (cookie && cookie=='true')){
+	if(core.options.gamemode){
+		//coneole.log('CHECK IN CHAR')
 		mainQuery({
 			data:{'method':'checkin','char_id':ch[0].char_id,'event_id':ds.currentEvent.event_id},
 			success: function(html){

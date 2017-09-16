@@ -2872,9 +2872,10 @@ function buildCheckin(){
 	}else if(core.options.gamemode && core.options.gamemode!='false'){
 		//check for cookie
 		$('body').addClass('find-gps')
-		compareLocationToSite(function(res){
+		//compareLocationToSite(function(res){
 			$('body').removeClass('find-gps')
-			if(res==1){
+			if(true){
+			//if(res==1){
 				toscreen('checkin',false,true);
 				thisEvent(function(){
 					activeChars(function(){
@@ -2887,7 +2888,7 @@ function buildCheckin(){
 			}else{
 				showMainDisplay()
 			}
-		})
+		//})
 	}else{
 		showMainDisplay()
 	}	
@@ -5787,7 +5788,8 @@ function logout(){
 		$('[name=pw]').val('')
 		$('#loginbtn').attr('disabled','disabled')
 		var cookie = getCookie('ds_onsite')
-		if(core.options.gamemode && core.options.gamemode !='false' && cookie && cookie == 'true'){
+		//if(core.options.gamemode && core.options.gamemode !='false' && cookie && cookie == 'true'){
+		if(core.options.gamemode && core.options.gamemode !='false' ){
 			toscreen('checkin',false,true);
 			$('#main-panel').stop().animate({opacity:1,'padding-bottom':0},1000,function(){
 			$('*').scrollTop(0)
